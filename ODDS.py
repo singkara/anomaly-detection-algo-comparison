@@ -65,6 +65,9 @@ for i in range(len(dataname_list)):
     #fpr_IF, tpr_IF, thresholds_IF = roc_curve(y_label, y_score_IF)
     auc_IF[i]= roc_auc_score(y_label, -y_score_IF)
     ap_IF[i] = average_precision_score(y_label, -y_score_IF)
+    print(auc_IF[i])
+    print(ap_IF[i])
+
 
     #LOF
     print('LOF')
@@ -74,6 +77,8 @@ for i in range(len(dataname_list)):
     #fpr_LOF, tpr_LOF, thresholds_LOF = roc_curve(y_label, y_score_LOF)
     auc_LOF[i] = roc_auc_score(y_label, -y_score_LOF)
     ap_LOF[i] = average_precision_score(y_label, -y_score_LOF)
+    print(auc_LOF[i])
+    print(ap_LOF[i])
 
     #DTM
     print('DTM')
@@ -82,6 +87,8 @@ for i in range(len(dataname_list)):
     #fpr_DTM, tpr_DTM, thresholds_DTM = roc_curve(y_label, -DTM_score)
     auc_DTM[i] = roc_auc_score(y_label, -y_score_DTM)
     ap_DTM[i] = average_precision_score(y_label, -y_score_DTM)
+    print(auc_DTM[i])
+    print(ap_DTM[i])
 
 
 auc = np.vstack([auc_IF,auc_LOF,auc_DTM]).T
@@ -95,8 +102,6 @@ ap_rankavg = np.mean(rank_ap,axis=0)
 
 auc = np.vstack([auc,auc_rankavg])
 ap = np.vstack([ap,ap_rankavg])
-print(auc)
-print(ap)
 
 np.save('data/real_auc',auc)
 np.save('data/real_ap',ap)
