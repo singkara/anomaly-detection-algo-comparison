@@ -45,6 +45,7 @@ for i in range(0,L):
         forest.fit(np.transpose(X))
         indices, outliers, scores , pst, alg_scores = forest.predict(np.transpose(X), err = 0.1, pct=50)
         alg_scores = - alg_scores
+
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         #plt.plot(fpr_alg,tpr_alg, 'b')
         thresh_len = len(fpr_alg)
@@ -126,12 +127,12 @@ for i in range(0,L):
         max_samples = min(20, X.shape[0])
         bag_neigh = 1
         clf_spDTM = BaggingRegressor(base_estimator=DTM(n_neighbors=bag_neigh, contamination=0.1), n_estimators=1,max_samples=max_samples, bootstrap=False, random_state=rng)
-        y_score_spDTM = clf_spDTM.fit(X, y).predict(np.transpose(X))
-        fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, y_score_spDTM, pos_label=1)
+        y_score_spDTM = clf_spDTM.fit(X, y).predict(X)
+        fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, -y_score_spDTM, pos_label=1)
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = ".", markersize=10, label='DTM')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = "X", markersize=10, label='DTM')
         auc_all[j,7] = metrics.roc_auc_score(y, y_score_spDTM)
         
     file_name = 'experiment_results/' + datasets[i] + '.pdf'
