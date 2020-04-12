@@ -14,7 +14,7 @@ import rrcf
 datasets = ['thyroid','mammography','satimage-2','vowels','siesmic','musk','smtp','http']
 
 L = len(datasets)
-trials = 1
+trials = 5
 
 for i in range(0,L):
     mat_data = sio.loadmat('../data/'+datasets[i]+'.mat')
@@ -44,7 +44,7 @@ for i in range(0,L):
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         #plt.plot(fpr_alg,tpr_alg, 'b')
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'k', marker = ">", markersize=15, label='PIDForest')
         auc_all[j,0] = metrics.roc_auc_score(y, alg_scores)
@@ -57,7 +57,7 @@ for i in range(0,L):
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         #plt.plot(fpr_alg,tpr_alg, 'g')
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'g', marker = "v", markersize=5, label='iForest')
         auc_all[j,1] = metrics.roc_auc_score(y, alg_scores)
@@ -86,7 +86,7 @@ for i in range(0,L):
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         #plt.plot(fpr_alg,tpr_alg, 'r')
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         #plt.scatter(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'r', marker = "*", s=100, label='RRCF')
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'r', marker = "*", markersize=5, label='RRCF')
@@ -98,7 +98,7 @@ for i in range(0,L):
         alg_scores = clf.decision_scores_ 
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'y', marker = "P", markersize=5, label='kNN')
         auc_all[j,5] = metrics.roc_auc_score(y, alg_scores)
@@ -109,7 +109,7 @@ for i in range(0,L):
         alg_scores = clf.decision_scores_ 
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = ".", markersize=5, label='PCA')
         auc_all[j,6] = metrics.roc_auc_score(y, alg_scores)
@@ -122,7 +122,7 @@ for i in range(0,L):
         y_score_spDTM = clf_spDTM.fit(X, y).predict(X)
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, -y_score_spDTM, pos_label=1)
         thresh_len = len(fpr_alg)
-        sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
+        sample_thresh = np.int_( [k * thresh_len/10 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'm', marker = "X", markersize=15, label='DTM')
         auc_all[j,7] = metrics.roc_auc_score(y, y_score_spDTM)
