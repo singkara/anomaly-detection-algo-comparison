@@ -4,11 +4,7 @@ import matplotlib.pyplot as plt
 from scripts.DTM import DTM
 from scripts.forest import Forest
 from sklearn.ensemble import IsolationForest, BaggingRegressor
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.svm import OneClassSVM
-import scripts.timeseries as ts
 import pandas as pd
-import time
 import scipy.io as sio
 from sklearn import metrics
 from pyod.models.knn import KNN
@@ -45,14 +41,12 @@ for i in range(0,L):
         forest.fit(np.transpose(X))
         indices, outliers, scores , pst, alg_scores = forest.predict(np.transpose(X), err = 0.1, pct=50)
         alg_scores = - alg_scores
-
         fpr_alg, tpr_alg, thresholds_alg = metrics.roc_curve(y, alg_scores, pos_label=1)
         #plt.plot(fpr_alg,tpr_alg, 'b')
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        #plt.scatter(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = ".", s=100, label='PIDForest')
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'k', marker = ">", markersize=10, label='PIDForest')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'k', marker = ">", markersize=15, label='PIDForest')
         auc_all[j,0] = metrics.roc_auc_score(y, alg_scores)
         
         print('\n******iForest*******\n')
@@ -65,8 +59,7 @@ for i in range(0,L):
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        #plt.scatter(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'g', marker = "v", s=100, label='iForest')
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'g', marker = "v", markersize=10, label='iForest')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'g', marker = "v", markersize=5, label='iForest')
         auc_all[j,1] = metrics.roc_auc_score(y, alg_scores)
         
         print('\n******RRCF*******\n')
@@ -96,9 +89,8 @@ for i in range(0,L):
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
         #plt.scatter(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'r', marker = "*", s=100, label='RRCF')
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'r', marker = "*", markersize=10, label='RRCF')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'r', marker = "*", markersize=5, label='RRCF')
         auc_all[j,2] = metrics.roc_auc_score(y, alg_scores)
-        
 
         print('\n******kNN*******\n')
         clf = KNN()
@@ -108,7 +100,7 @@ for i in range(0,L):
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'y', marker = "P", markersize=10, label='kNN')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'y', marker = "P", markersize=5, label='kNN')
         auc_all[j,5] = metrics.roc_auc_score(y, alg_scores)
         
         print('\n******PCA*******\n')
@@ -119,7 +111,7 @@ for i in range(0,L):
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = ".", markersize=10, label='PCA')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = ".", markersize=5, label='PCA')
         auc_all[j,6] = metrics.roc_auc_score(y, alg_scores)
 
         print('\n******DTM*******\n')
@@ -132,12 +124,12 @@ for i in range(0,L):
         thresh_len = len(fpr_alg)
         sample_thresh = np.int_( [k * thresh_len/30 for k in range(10)] )
         sample_thresh = np.concatenate( [sample_thresh, np.asarray([thresh_len-1]) ])
-        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'b', marker = "X", markersize=10, label='DTM')
+        plt.plot(fpr_alg[sample_thresh],tpr_alg[sample_thresh], c = 'm', marker = "X", markersize=15, label='DTM')
         auc_all[j,7] = metrics.roc_auc_score(y, y_score_spDTM)
         
     file_name = 'experiment_results/' + datasets[i] + '.pdf'
     
-    for k in range(0,7):
+    for k in range(0,8):
         print('{:.4f}\t'.format( auc_all[j,k] ))
     print('\n')
 
