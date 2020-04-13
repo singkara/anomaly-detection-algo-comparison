@@ -14,7 +14,7 @@ import rrcf
 datasets = ['thyroid','mammography','satimage-2','vowels','siesmic','musk','smtp','http']
 
 L = len(datasets)
-trials = 5
+trials = 1
 
 for i in range(0,L):
     mat_data = sio.loadmat('../data/'+datasets[i]+'.mat')
@@ -142,5 +142,3 @@ for i in range(0,L):
                 
     file_name = 'experiment_results/' + datasets[i] + '_results_plot.mat'
     sio.savemat(file_name, {'auc_all':auc_all})
-
-    
