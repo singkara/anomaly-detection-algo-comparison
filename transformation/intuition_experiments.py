@@ -46,7 +46,7 @@ mdl.fit(x=x_train_single_transformed,
         y=to_categorical(transformations_inds),
         batch_size=batch_size,
         validation_split=0.1,
-        epochs=1)
+        epochs=10)
 
 single_class_preds = np.zeros((len(x_test_single), transformer.n_transforms))
 for t in range(transformer.n_transforms):

@@ -20,7 +20,6 @@ def resize_and_crop_image(input_file, output_side_length, greyscale=False):
     resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
     height_offset = (new_height - output_side_length) // 2
     width_offset = (new_width - output_side_length) // 2
-
     cropped_img = resized_img[height_offset:height_offset + output_side_length,
                               width_offset:width_offset + output_side_length]
     assert cropped_img.shape[:2] == (output_side_length, output_side_length)

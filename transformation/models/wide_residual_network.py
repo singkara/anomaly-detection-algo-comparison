@@ -1,11 +1,9 @@
-from keras.legacy import interfaces
 from keras.models import Model
 from keras.layers import *
 from keras.regularizers import l2
 from keras.initializers import _compute_fans
 from keras.optimizers import SGD
 from keras import backend as K
-import numpy as np
 
 
 WEIGHT_DECAY = 0.5 * 0.0005

@@ -47,7 +47,7 @@ def train_cifar10():
     batch_size = 128
     mdl.fit_generator(
         generator=idg.flow(x_train, to_categorical(y_train), batch_size=batch_size),
-        epochs=1,
+        epochs=200,
         validation_data=(idg.standardize(x_test), to_categorical(y_test)),
         callbacks=[lr_cb]
     )
@@ -95,7 +95,7 @@ def train_cifar10_transformations():
     mdl.fit_generator(
         generator=data_gen(x_train, y_train, batch_size=batch_size),
         steps_per_epoch=len(x_train) // batch_size,
-        epochs=1,
+        epochs=200,
         callbacks=[lr_cb]
     )
     mdl.save_weights('cifar10_WRN_doublehead-transformations_{}-{}.h5'.format(n, k))

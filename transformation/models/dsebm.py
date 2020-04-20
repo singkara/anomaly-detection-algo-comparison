@@ -1,4 +1,3 @@
-from keras import initializers, regularizers, constraints
 from keras.layers import *
 from keras.models import Model
 import keras.backend as K

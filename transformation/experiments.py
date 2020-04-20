@@ -7,7 +7,7 @@ from multiprocessing import Manager, freeze_support, Process
 import numpy as np
 import scipy.stats
 from scipy.special import psi, polygamma
-import sklearn.metrics
+from sklearn.metrics import roc_auc_score
 from sklearn.svm import OneClassSVM
 from sklearn.model_selection import ParameterGrid
 from sklearn.externals.joblib import Parallel, delayed
@@ -20,10 +20,10 @@ from transformations import Transformer
 from models.wide_residual_network import create_wide_residual_network
 from models.encoders_decoders import conv_encoder, conv_decoder
 from models import dsebm, dagmm, adgan
+import keras.backend as K
 
 RESULTS_DIR = ''
 
-epoches=1
 
 def _transformations_experiment(dataset_load_fn, dataset_name, single_class_ind, gpu_q):
     gpu_to_use = gpu_q.get()
@@ -49,7 +49,7 @@ def _transformations_experiment(dataset_load_fn, dataset_name, single_class_ind,
     batch_size = 128
 
     mdl.fit(x=x_train_task_transformed, y=to_categorical(transformations_inds),
-            batch_size=batch_size, epochs=int(np.ceil(epoches/transformer.n_transforms))
+            batch_size=batch_size, epochs=int(np.ceil(200/transformer.n_transforms))
             )
 
     #################################################################################################
@@ -127,7 +127,7 @@ def _transformations_experiment(dataset_load_fn, dataset_name, single_class_ind,
 
 
 def _train_ocsvm_and_score(params, xtrain, test_labels, xtest):
-    return sklearn.metrics.roc_auc_score(test_labels, OneClassSVM(**params).fit(xtrain).decision_function(xtest))
+    return roc_auc_score(test_labels, OneClassSVM(**params).fit(xtrain).decision_function(xtest))
 
 
 def _raw_ocsvm_experiment(dataset_load_fn, dataset_name, single_class_ind):
@@ -177,7 +177,7 @@ def _cae_ocsvm_experiment(dataset_load_fn, dataset_name, single_class_ind, gpu_q
 
     x_train_task = x_train[y_train.flatten() == single_class_ind]
     x_test_task = x_test[y_test.flatten() == single_class_ind]  # This is just for visual monitoring
-    cae.fit(x=x_train_task, y=x_train_task, batch_size=128, epochs=epoches, validation_data=(x_test_task, x_test_task))
+    cae.fit(x=x_train_task, y=x_train_task, batch_size=128, epochs=200, validation_data=(x_test_task, x_test_task))
 
     x_train_task_rep = enc.predict(x_train_task, batch_size=128)
     if dataset_name in ['cats-vs-dogs']:  # OC-SVM is quadratic on the number of examples, so subsample training set
@@ -221,7 +221,7 @@ def _dsebm_experiment(dataset_load_fn, dataset_name, single_class_ind, gpu_q):
 
     # optimization parameters
     batch_size = 128
-    epochs = epoches
+    epochs = 200
     reconstruction_mdl.compile('adam', 'mse')
     x_train_task = x_train[y_train.flatten() == single_class_ind]
     x_test_task = x_test[y_test.flatten() == single_class_ind]  # This is just for visual monitoring
@@ -259,7 +259,7 @@ def _dagmm_experiment(dataset_load_fn, dataset_name, single_class_ind, gpu_q):
                             )
 
     batch_size = 256
-    epochs = epoches
+    epochs = 200
     lambda_diag = 0.0005
     lambda_energy = 0.01
     dagmm_mdl = dagmm.create_dagmm_model(enc, dec, estimation, lambda_diag)
@@ -432,7 +432,10 @@ if __name__ == '__main__':
         q.put(str(g))
 
     experiments_list = [
-        (load_cifar100, 'cifar100', 20)
+        (load_cifar10, 'cifar10', 10),
+        (load_cifar100, 'cifar100', 20),
+        (load_fashion_mnist, 'fashion-mnist', 10),
+        (load_cats_vs_dogs, 'cats-vs-dogs', 2),
     ]
 
     for data_load_fn, dataset_name, n_classes in experiments_list:
