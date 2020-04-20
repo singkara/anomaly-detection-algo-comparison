@@ -11,19 +11,17 @@ from pyod.models.knn import KNN
 from pyod.models.pca import PCA
 import rrcf
 
-datasets = ['gisette']
+datasets = ['madelonfinalest.mat']
 
 L = len(datasets)
 trials = 1
 
 for i in range(0,L):
-    mat_data = sio.loadmat('../data/'+datasets[i]+'.mat')
-    X = mat_data['X'][0][0]
-    #if str(type(t)) == "<class 'numpy.uint8'>":
-     #   X = np.int_(X)
+    mat_data = sio.loadmat('../data/'+datasets[i])
+    X = mat_data['k']['X'][0][0]
     X = np.float_(X)
     [n,d] = np.shape(X)
-    y = mat_data['y'][0][0]
+    y = mat_data['k']['Y'][0][0]
 
     auc_all = np.zeros((trials,8))
     
