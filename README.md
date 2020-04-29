@@ -1,10 +1,2 @@
-# PIDforest
-Code for the PIDForest algorithm for anomaly detection.
-
-The PIDForest algorithm is based on the Partial Identification framework for anomaly detection. Partial Identification captures the intuition that anomalies are easy to distinguish from the overwhelming majority of points by relatively few attribute values. PIDScore is a geometric anomaly score based on this framework, and it measures the minimum density of data points over all subcubes containing the point. PIDForest is a random forest based algorithm that finds anomalies based on PIDScore. 
-
-The [accompanying paper](https://arxiv.org/abs/1912.03582) shows that PIDForest performs favorably in comparison to several popular anomaly detection methods, across a broad range of benchmarks. PIDForest also provides a succinct explanation for why a point is labelled anomalous, by providing a set of features and ranges for them which are relatively uncommon in the dataset.
-
-The associated data files in .mat format are also attached. Many of these datasets have additional citation requests if they are useful in your research.
-
-The current implementation is in Python, we are working on releasing a much faster C++ based implementation soon.
+# PIDforest, DTM and Geometric Transformation
+We consider to do a comparative analysis on the two state-of-the-art algorithms in Anomaly Detection (PIDForest and DTM) and derive performance metrics of the two algorithms on several standard benchmark datasets for anomaly detection. All datasets we have used to compare the two algorithms are provided by the ODDS library and range from low to high dimensional, from sparse to densely scattered data and categorical/real values to images. Secondly, we have also studied and applied the concept of Geometric Transformation on standard image datasets and concluded that although transformation is efficient in determining anomalies when the dataset has moderate number of classifications, however its efficiency falls when the classification numbers increases. All the python code, datasets and run results are in our public Github repository
